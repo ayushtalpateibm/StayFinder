@@ -24,6 +24,7 @@ const userRouter = require("./routes/user");
 
 const app = express();
 const dbUrl = process.env.AtalasDB_Url;
+const serverless = require("serverless-http");
 
 // Set up EJS with layouts
 app.engine("ejs", ejsMate);
@@ -111,9 +112,11 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-if (require.main === module) {
+if (process.env.NODE_ENV !== "production") {
     app.listen(8080, () => {
-        console.log("🚀 Server listening on port 8080");
+        console.log("🚀 Local server running on 8080");
     });
 }
 
+module.exports = app;
+module.exports.handler = serverless(app);
